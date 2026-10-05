@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Tracker & Task Ledger</title>
+    <title>Time Tracker & Daily Report Ledger</title>
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     <style>
         :root {
             --bg-dark: #09090b;
@@ -304,9 +305,6 @@
                         <h2><i class="fa-solid fa-stopwatch"></i> Shift Timer</h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                             <span id="statusPill" class="status-pill idle">Status: Idle</span>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">
-                                In: <span id="displayTimeIn" style="color: white;">--:--</span> | Out: <span id="displayTimeOut" style="color: white;">--:--</span>
-                            </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                             <button id="btnTimeIn" onclick="handleTimer('timeIn')" class="btn" style="background: var(--accent-green); color: white; border: none;"><i class="fa-solid fa-play"></i> Time In</button>
@@ -369,19 +367,19 @@
                     </div>
                 </div>
 
-                <!-- MAIN AREA: Time Ledger & Publish Task Queue -->
+                <!-- MAIN AREA: Spreadsheet Ledger & Publish Task Queue -->
                 <div>
-                    <!-- Time Tracker Ledger -->
+                    <!-- Spreadsheet Ledger -->
                     <div class="card">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <h2 style="margin: 0;"><i class="fa-solid fa-table"></i> Spreadsheet</h2>
+                            <h2 style="margin: 0;"><i class="fa-solid fa-table"></i> Spreadsheet Ledger</h2>
                             <span id="recordCountBadge" style="background: #27272a; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: var(--text-secondary);">0 ENTRIES</span>
                         </div>
                         <div class="table-responsive">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Date / User</th>
+                                        <th>Date / Author</th>
                                         <th>In</th>
                                         <th>Out</th>
                                         <th>Location / Set</th>
@@ -439,7 +437,7 @@
                     <!-- Publish Queue Ledger Table -->
                     <div class="card" style="margin-top: 20px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <h2 style="margin: 0;"><i class="fa-solid fa-list-check"></i> Publish Task</h2>
+                            <h2 style="margin: 0;"><i class="fa-solid fa-list-check"></i> Publish Task Queue Ledger</h2>
                             <span id="pubRecordCountBadge" style="background: #27272a; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: var(--text-secondary);">0 ENTRIES</span>
                         </div>
                         <div class="table-responsive">
@@ -494,6 +492,32 @@
                     <button type="submit" class="btn" style="flex: 2; background: var(--accent-blue); color: white;">Save Changes</button>
                     <button type="button" onclick="modalDeleteRecord()" class="btn btn-danger" style="flex: 1;"><i class="fa-solid fa-trash"></i> Delete</button>
                     <button type="button" onclick="closeEditModal()" class="btn" style="flex: 1;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EDIT PUBLISH TASK MODAL -->
+    <div id="editPublishModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-pen"></i> Edit Publish Task</h2>
+            <form id="editPublishForm" onsubmit="saveEditedPublishTask(event)" style="display: flex; flex-direction: column; gap: 10px;">
+                <input type="hidden" id="editPubId">
+                <div><label style="font-size:0.75rem; color:var(--text-secondary);">Location / Client</label><input type="text" id="editPubLocation" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                <div><label style="font-size:0.75rem; color:var(--text-secondary);">Task / Content Type</label><input type="text" id="editPubType" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                <div><label style="font-size:0.75rem; color:var(--text-secondary);">Document Link</label><input type="url" id="editPubLink" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                <div>
+                    <label style="font-size:0.75rem; color:var(--text-secondary);">Status</label>
+                    <select id="editPubStatus" style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                        <option value="For publish">For publish</option>
+                        <option value="For Review">For Review</option>
+                        <option value="Done">Done</option>
+                    </select>
+                </div>
+                <div><label style="font-size:0.75rem; color:var(--text-secondary);">Notes</label><input type="text" id="editPubNotes" style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn" style="flex: 2; background: var(--accent-blue); color: white;">Save Changes</button>
+                    <button type="button" onclick="closeEditPublishModal()" class="btn" style="flex: 1;">Cancel</button>
                 </div>
             </form>
         </div>
