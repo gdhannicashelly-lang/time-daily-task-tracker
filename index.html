@@ -3,157 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Tracker & Daily Task SEOTalks_OLK9(</title>
-    <!-- FontAwesome Icons -->
+    <title>Time Tracker & Task Ledger</title>
+    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-main: #121212;
-            --bg-card: #1e1e24;
+            --bg-dark: #09090b;
+            --card-bg: #121215;
             --border-color: #27272a;
-            --text-main: #ffffff;
+            --text-main: #f4f4f5;
             --text-secondary: #a1a1aa;
-            --accent-purple: #d8b4fe;
-            --accent-blue: #38bdf8;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
             --accent-green: #10b981;
-            --accent-red: #f43f5e;
-            --accent-yellow: #f59e0b;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); min-height: 100vh; }
-        .hidden { display: none !important; }
-
-        /* Login Overlay */
-        #loginOverlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-main); display: flex; justify-content: center; align-items: center; z-index: 9999;
-        }
-        .auth-card {
-            background: var(--bg-card); padding: 40px; border-radius: 12px; width: 400px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5); text-align: center;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* App Container & Layout */
-        #appContainer { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 15px 25px; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 20px; }
-        
-        .dashboard-grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
-        @media(max-width: 1024px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 20px; }
-        
-        /* Inputs & Buttons */
-        input, select, textarea {
-            width: 100%; padding: 10px 12px; background: #121212; border: 1px solid var(--border-color);
-            border-radius: 6px; color: #fff; font-size: 0.9rem; outline: none; margin-top: 5px; margin-bottom: 15px;
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        input:focus, select:focus, textarea:focus { border-color: var(--accent-purple); }
-        
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Navbar Header */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
         .btn {
-            padding: 10px 16px; border-radius: 6px; font-weight: 600; border: none; cursor: pointer; font-size: 0.9rem;
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
         }
-        .btn:hover { opacity: 0.9; }
-        .btn-primary { background: var(--accent-purple); color: #000; width: 100%; }
-        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); }
-        
-        /* Timer Status Pills */
-        .status-pill { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+
+        .btn:hover {
+            background: var(--border-color);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        /* Layout Container */
+        .main-container {
+            padding: 20px 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Status Pills */
+        .status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
         .status-pill.idle { background: #3f3f46; color: #d4d4d8; }
-        .status-pill.working { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
-        .status-pill.onbreak { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
-        .status-pill.completed { background: rgba(244, 63, 94, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
+        .status-pill.working { background: #059669; color: #fff; }
+        .status-pill.onbreak { background: #d97706; color: #fff; }
+        .status-pill.completed { background: #2563eb; color: #fff; }
 
-        /* Tables & Ledgers */
-        .table-responsive { width: 100%; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
-        th, td { padding: 12px; border-bottom: 1px solid var(--border-color); }
-        th { background: #18181b; color: var(--text-secondary); font-weight: 700; }
-        tr:hover { background: rgba(255,255,255,0.01); }
-
-        /* Modal Overlay */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 10000;
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
         }
-        .modal-card { background: var(--bg-card); padding: 30px; border-radius: 12px; width: 450px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            background: rgba(255,255,255,0.01);
+        }
+
+        /* Login Overlay Styles */
+        #loginOverlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            background: #18181b;
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 6px;
+        }
+
+        /* Modal Overlays */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN OVERLAY -->
+    <!-- AUTHENTICATION LOGIN OVERLAY -->
     <div id="loginOverlay">
-        <div class="auth-card">
-            <h1 style="font-size:2.2rem; font-weight:800; letter-spacing:-1px; margin-bottom:5px; color:#fff;">Daily Time & tasks Tracker</h1>
-            <p style="color:var(--text-secondary); font-size:0.95rem; font-style:italic; margin-bottom:30px;">Log in and get focused!</p>
-
-            <form onsubmit="handleLogin(event)" style="text-align:left;">
-                <div style="margin-bottom:15px;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); letter-spacing:0.5px; margin-bottom:6px;">EMAIL</label>
-                    <input type="email" id="loginEmail" required placeholder="Enter your email">
+        <div class="login-box">
+            <h2 style="margin-bottom: 20px;"><i class="fa-solid fa-lock"></i> Time Tracker & Ledger Login</h2>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="employee@company.com" required>
                 </div>
-
-                <div style="margin-bottom:10px; position:relative;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); letter-spacing:0.5px; margin-bottom:6px;">PASSWORD</label>
-                    <input type="password" id="loginPassword" required placeholder="Enter your password" style="padding-right:40px;">
-                    <i id="loginPasswordIcon" class="fa-solid fa-eye" onclick="revealPassword('loginPassword', 'loginPasswordIcon')" style="position:absolute; right:14px; top:38px; color:var(--text-secondary); cursor:pointer;"></i>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div style="position: relative;">
+                        <input type="password" id="loginPassword" placeholder="••••••••" required style="padding-right: 35px;">
+                        <i id="loginPassIcon" class="fa-solid fa-eye" onclick="revealPassword('loginPassword', 'loginPassIcon')" style="position: absolute; right: 12px; top: 13px; color: var(--text-secondary); cursor: pointer;"></i>
+                    </div>
                 </div>
-
-                <div style="margin-bottom:15px;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); letter-spacing:0.5px; margin-bottom:6px;">ROLE PERMISSION</label>
+                <div class="form-group">
+                    <label>System Role</label>
                     <select id="loginRole">
-                        <option value="user">Employee</option>
+                        <option value="user">User / Employee</option>
                         <option value="manager">Manager</option>
-                          <option value="ceo">CEO/CO-CEO</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>
-
-                <div style="text-align:left; margin-bottom:20px;">
-                    <a href="#" onclick="handlePasswordReset()" style="color:#fff; font-size:0.85rem; text-decoration:underline;">Reset password</a>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 0.8rem;">
+                    <a href="#" onclick="handlePasswordReset()" style="color: var(--accent-blue); text-decoration: none;">Forgot password?</a>
+                    <a href="#" onclick="openSignupModal()" style="color: var(--accent-purple); text-decoration: none;">Create Account</a>
                 </div>
-
-                <button type="submit" class="btn btn-primary" style="margin-bottom:20px;">Log in via email</button>
+                <button type="submit" class="btn" style="width: 100%; background: var(--accent-blue); color: white; font-weight: bold; padding: 10px;">Sign In</button>
             </form>
-
-            <div>
-                <a href="#" onclick="openSignupModal()" style="color:#fff; font-size:0.9rem; font-weight:600; text-decoration:none;">Sign up for an account</a>
-            </div>
         </div>
     </div>
 
-    <!-- SIGNUP MODAL OVERLAY -->
+    <!-- SIGNUP MODAL -->
     <div id="signupModalOverlay" class="modal-overlay">
-        <div class="auth-card" style="position:relative;">
-            <h2 style="font-size:1.5rem; font-weight:800; margin-bottom:5px; color:#fff;">Create Account</h2>
-            <p style="color:var(--text-secondary); font-size:0.85rem; margin-bottom:20px;">Set up your workspace credentials</p>
-
-            <form id="signupForm" onsubmit="handleSignup(event)" style="text-align:left;">
-                <div style="margin-bottom:15px;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); margin-bottom:6px;">EMAIL</label>
-                    <input type="email" id="signupEmail" required placeholder="name@company.com">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-user-plus"></i> Create New Account</h2>
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="newuser@company.com" required>
                 </div>
-
-                <div style="margin-bottom:15px; position:relative;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); margin-bottom:6px;">PASSWORD</label>
-                    <input type="password" id="signupPassword" required placeholder="Create password" style="padding-right:40px;">
-                    <i id="signupPasswordIcon" class="fa-solid fa-eye" onclick="revealPassword('signupPassword', 'signupPasswordIcon')" style="position:absolute; right:14px; top:36px; color:var(--text-secondary); cursor:pointer;"></i>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="••••••••" required>
                 </div>
-
-                <div style="margin-bottom:20px;">
-                    <label style="display:block; font-size:0.75rem; font-weight:700; color:var(--text-secondary); margin-bottom:6px;">INITIAL ROLE</label>
+                <div class="form-group">
+                    <label>Role</label>
                     <select id="signupRole">
-                        <option value="user">User/ Employee</option>
+                        <option value="user">User / Employee</option>
                         <option value="manager">Manager</option>
-                        <option value="ceo">CEO</option>
-                        <option value="co-ceo">CO-CEO</option>
                         <option value="admin">Admin</option>
                     </select>
                 </div>
-
-                <button type="submit" class="btn btn-primary" style="margin-bottom:10px;">Register Account</button>
-                <button type="button" onclick="closeSignupModal()" class="btn btn-outline" style="width:100%;">Cancel</button>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button type="submit" class="btn" style="flex: 1; background: var(--accent-blue); color: white;">Register</button>
+                    <button type="button" onclick="closeSignupModal()" class="btn" style="flex: 1;">Cancel</button>
+                </div>
             </form>
         </div>
     </div>
@@ -161,150 +285,182 @@
     <!-- MAIN APP CONTAINER -->
     <div id="appContainer" class="hidden">
         <header>
-            <div>
-                <h2><i class="fa-solid fa-clock-rotate-left" style="color:var(--accent-purple);"></i> Time Tracker & Task Ledger</h2>
-            </div>
-            <div style="display:flex; align-items:center; gap:15px;">
-                <div style="text-align:right;">
-                    <div id="loggedInUserDisplay" style="font-weight:700;">User</div>
-                    <small id="loggedInRoleDisplay" style="color:var(--accent-purple); font-weight:600;">ROLE</small>
+            <h1><i class="fa-solid fa-clock-rotate-left"></i> Time Tracker & Daily Report_SEOTalks_OLK9</h1>
+            <div class="user-info">
+                <div>
+                    <span id="loggedInUserDisplay" style="font-weight: 600;">Username</span><br>
+                    <small id="loggedInRoleDisplay" style="color: var(--accent-purple); font-weight: 700;">USER</small>
                 </div>
-                <button onclick="logoutSession()" class="btn btn-outline" style="padding:6px 12px; font-size:0.8rem; border-color:var(--accent-red); color:var(--accent-red);"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+                <button onclick="logoutSession()" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
             </div>
         </header>
 
-        <div class="dashboard-grid">
-            <!-- Left Sidebar: Live Timer & Submission Form -->
-            <div>
-                <div class="card">
-                    <h3 style="margin-bottom:15px; font-size:1.1rem;"><i class="fa-solid fa-stopwatch"></i> Shift Timer</h3>
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <span id="statusPill" class="status-pill idle">Status: Idle</span>
-                        <div style="font-size:0.85rem; color:var(--text-secondary);">
-                            In: <strong id="displayTimeIn" style="color:#fff;">--:--</strong> | Out: <strong id="displayTimeOut" style="color:#fff;">--:--</strong>
-                        </div>
-                    </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:8px;">
-                        <button id="btnTimeIn" onclick="handleTimer('timeIn')" class="btn" style="background:var(--accent-green); color:#000;"><i class="fa-solid fa-play"></i> Time In</button>
-                        <button id="btnBreak" onclick="handleTimer('break')" class="btn" style="background:var(--accent-yellow); color:#000;" disabled><i class="fa-solid fa-mug-hot"></i> Break</button>
-                    </div>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                        <button id="btnBack" onclick="handleTimer('back')" class="btn" style="background:var(--accent-blue); color:#000;" disabled><i class="fa-solid fa-rotate-left"></i> Resume</button>
-                        <button id="btnTimeOut" onclick="handleTimer('timeOut')" class="btn" style="background:var(--accent-red); color:#fff;" disabled><i class="fa-solid fa-stop"></i> Time Out</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 style="margin-bottom:15px; font-size:1.1rem;"><i class="fa-solid fa-pen-to-square"></i> Log Task Entry</h3>
-                    <form id="reportForm" onsubmit="addReport(event)">
-                        <label>Date</label>
-                        <input type="date" id="inputDate" required>
-
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                            <div>
-                                <label>Month Cycle</label>
-                                <select id="inputMonth">
-                                    <option value="MONTH ">MONTH </option>
-                                    <option value="MONTH">MONTH </option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Set</label>
-                                <select id="inputSet">
-                                    <option value="SET 1">SET 1</option>
-                                    <option value="SET 2">SET 2</option>
-                                    <option value="SET 3">SET 3</option>
-                                    <option value="SET 4">SET 4</option>
-                                    <option value="SET 5">SET 5</option>
-                                    <option value="SET 6">SET 6</option>
-                                </select>
+        <div class="main-container">
+            <div class="dashboard-grid">
+                <!-- SIDEBAR: Timer & Task Entry Form -->
+                <div>
+                    <!-- Shift Timer Card -->
+                    <div class="card" id="timerCard">
+                        <h2><i class="fa-solid fa-stopwatch"></i> Shift Timer</h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span id="statusPill" class="status-pill idle">Status: Idle</span>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">
+                                In: <span id="displayTimeIn" style="color: white;">--:--</span> | Out: <span id="displayTimeOut" style="color: white;">--:--</span>
                             </div>
                         </div>
-
-                        <label>Location / Topic Area</label>
-                        <input type="text" id="inputLocation" placeholder="e.g. Winston-Salem, NC" required>
-
-                        <label>Task Title</label>
-                        <input type="text" id="inputTaskHeader" placeholder="e.g. Dog Training Guide Draft" required>
-
-                        <label>Task Details / Steps</label>
-                        <textarea id="inputTaskDetails" rows="3" placeholder="Describe completed tasks..." required></textarea>
-
-                        <label>Task Document Link</label>
-                        <input type="url" id="inputTaskLink" placeholder="https://docs.google.com/...">
-
-                        <label>Hours Logged</label>
-                        <input type="text" id="inputHours" placeholder="e.g. 8 hours" required>
-
-                        <label>Notes</label>
-                        <input type="text" id="inputNotes" placeholder="Additional notes...">
-
-                        <div class="manager-only" style="display:none; flex-direction:column;">
-                            <label style="color:var(--accent-yellow);">Operations Note (Manager)</label>
-                            <input type="text" id="inputOpsNote" placeholder="Reviewer notes...">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button id="btnTimeIn" onclick="handleTimer('timeIn')" class="btn" style="background: var(--accent-green); color: white; border: none;"><i class="fa-solid fa-play"></i> Time In</button>
+                            <button id="btnBreak" onclick="handleTimer('break')" class="btn" disabled><i class="fa-solid fa-mug-hot"></i> Break</button>
+                            <button id="btnBack" onclick="handleTimer('back')" class="btn" disabled><i class="fa-solid fa-person-walking-arrow-loop-left"></i> Back</button>
+                            <button id="btnTimeOut" onclick="handleTimer('timeOut')" class="btn" style="background: #ef4444; color: white; border: none;" disabled><i class="fa-solid fa-stop"></i> Time Out</button>
                         </div>
+                    </div>
 
-                        <button type="submit" class="btn btn-primary" style="margin-top:10px;"><i class="fa-solid fa-floppy-disk"></i> Save to Ledger</button>
-                    </form>
+                    <!-- Log Task Entry Card -->
+                    <div class="card" id="entryCard">
+                        <h2><i class="fa-solid fa-pen-to-square"></i> Log Task Entry</h2>
+                        <form id="reportForm" onsubmit="addReport(event)" style="display: flex; flex-direction: column; gap: 10px;">
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-secondary);">Date</label>
+                                <input type="date" id="inputDate" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.75rem; color: var(--text-secondary);">Month</label>
+                                    <input type="text" id="inputMonth" placeholder="e.g. October" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.75rem; color: var(--text-secondary);">Set</label>
+                                    <input type="text" id="inputSet" placeholder="e.g. Set 3" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                                </div>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-secondary);">Location / Client</label>
+                                <input type="text" id="inputLocation" placeholder="e.g. Syracuse - Cicero NY" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-secondary);">Task Header</label>
+                                <input type="text" id="inputTaskHeader" placeholder="e.g. Service+location" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-secondary);">Task Details</label>
+                                <textarea id="inputTaskDetails" placeholder="Description of work completed..." style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px; height: 60px;"></textarea>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.75rem; color: var(--text-secondary);">Google Doc Link</label>
+                                <input type="url" id="inputTaskLink" placeholder="https://docs.google.com/..." style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.75rem; color: var(--text-secondary);">Hours Spent</label>
+                                    <input type="text" id="inputHours" placeholder="e.g. 2 hours" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.75rem; color: var(--text-secondary);">Notes</label>
+                                    <input type="text" id="inputNotes" placeholder="Optional" style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                                </div>
+                            </div>
+                            <div class="manager-only" style="display: none; flex-direction: column;">
+                                <label style="font-size: 0.75rem; color: var(--accent-purple);">Manager Ops Note</label>
+                                <input type="text" id="inputOpsNote" placeholder="Internal directive..." style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;">
+                            </div>
+                            <button type="submit" class="btn" style="background: var(--accent-blue); color: white; font-weight: bold; margin-top: 5px; padding: 10px;">Submit Entry</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Right Area: Spreadsheet Reports & Tables -->
-            <div>
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h3><i class="fa-solid fa-table"></i> Spreadsheet</h3>
-                        <span id="recordCountBadge" class="status-pill idle">0 entries</span>
+                <!-- MAIN AREA: Time Ledger & Publish Task Queue -->
+                <div>
+                    <!-- Time Tracker Ledger -->
+                    <div class="card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h2 style="margin: 0;"><i class="fa-solid fa-table"></i> Spreadsheet</h2>
+                            <span id="recordCountBadge" style="background: #27272a; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: var(--text-secondary);">0 ENTRIES</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date / User</th>
+                                        <th>In</th>
+                                        <th>Out</th>
+                                        <th>Location / Set</th>
+                                        <th>Task Information</th>
+                                        <th>Link</th>
+                                        <th>Hours</th>
+                                        <th>Notes</th>
+                                        <th>Ops Note</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <tr><td colspan="10" style="text-align: center; color: var(--text-secondary); padding: 25px;">No spreadsheet entries found.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Date / User</th>
-                                    <th>In</th>
-                                    <th>Out</th>
-                                    <th>Location / Set</th>
-                                    <th>Task Information</th>
-                                    <th>Link</th>
-                                    <th>Hours</th>
-                                    <th>Notes</th>
-                                    <th>Ops Note</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tableBody">
-                                <!-- Populated via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
-                <!-- Archive Section -->
-                <div id="archiveSection" class="card" style="display:none;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                        <h3 style="color:var(--text-secondary);"><i class="fa-solid fa-box-archive"></i> Archived Records</h3>
-                        <span id="archiveCountBadge" class="status-pill idle">0 archived</span>
+                    <!-- Submit Publish Task Form Card -->
+                    <div class="card" id="publishCard" style="margin-top: 20px;">
+                        <h2><i class="fa-solid fa-cloud-arrow-up"></i> Submit Publish Task</h2>
+                        <form id="publishForm" onsubmit="addPublishTask(event)" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                            <div style="display: flex; gap: 10px;">
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary);">Location / Client</label>
+                                    <input type="text" id="pubLocation" placeholder="e.g., Atlanta - Lithia Springs GA" required style="width: 100%; padding: 8px; background: #18181b; border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary);">Task / Content Type</label>
+                                    <input type="text" id="pubType" placeholder="e.g., Service+location / 4 Blogs" required style="width: 100%; padding: 8px; background: #18181b; border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <div style="flex: 2;">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary);">Document Link</label>
+                                    <input type="url" id="pubLink" placeholder="https://docs.google.com/..." required style="width: 100%; padding: 8px; background: #18181b; border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                                </div>
+                                <div style="flex: 1;">
+                                    <label style="font-size: 0.8rem; color: var(--text-secondary);">Status</label>
+                                    <select id="pubStatus" style="width: 100%; padding: 8px; background: #18181b; border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                                        <option value="For publish">For publish</option>
+                                        <option value="For Review">For Review</option>
+                                        <option value="Done">Done</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.8rem; color: var(--text-secondary);">Notes</label>
+                                <input type="text" id="pubNotes" placeholder="Optional notes (e.g., not using elementor)" style="width: 100%; padding: 8px; background: #18181b; border: 1px solid var(--border-color); color: white; border-radius: 4px;">
+                            </div>
+                            <button type="submit" class="btn" style="background: var(--accent-blue); color: white; padding: 10px; font-weight: bold; border-radius: 4px; cursor: pointer;">Add to Publish Queue</button>
+                        </form>
                     </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Date / Author</th>
-                                    <th>In</th>
-                                    <th>Out</th>
-                                    <th>Location / Set</th>
-                                    <th>Task Information</th>
-                                    <th>Link</th>
-                                    <th>Hours</th>
-                                    <th>Notes</th>
-                                    <th>Ops Note</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="archiveTableBody">
-                                <!-- Populated via JS -->
-                            </tbody>
-                        </table>
+
+                    <!-- Publish Queue Ledger Table -->
+                    <div class="card" style="margin-top: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h2 style="margin: 0;"><i class="fa-solid fa-list-check"></i> Publish Task</h2>
+                            <span id="pubRecordCountBadge" style="background: #27272a; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; color: var(--text-secondary);">0 ENTRIES</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Location</th>
+                                        <th>Task Information</th>
+                                        <th>Link</th>
+                                        <th>Status</th>
+                                        <th>Published Date</th>
+                                        <th>Published By</th>
+                                        <th>Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="publishTableBody">
+                                    <tr><td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 25px;">No publish tasks found.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -313,44 +469,36 @@
 
     <!-- EDIT RECORD MODAL -->
     <div id="editModalOverlay" class="modal-overlay">
-        <div class="modal-card">
-            <h3 style="margin-bottom:15px;"><i class="fa-solid fa-pen"></i> Edit Task Record</h3>
-            <form onsubmit="saveEditedReport(event)">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 15px;"><i class="fa-solid fa-pen"></i> Edit Task Entry</h2>
+            <form id="editForm" onsubmit="saveEditedReport(event)" style="display: flex; flex-direction: column; gap: 10px;">
                 <input type="hidden" id="editRecordId">
-                <label>Date</label>
-                <input type="date" id="editDate" required>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <div><label>Time In</label><input type="text" id="editTimeIn" required></div>
-                    <div><label>Time Out</label><input type="text" id="editTimeOut" required></div>
+                <div style="display: flex; gap: 8px;">
+                    <div style="flex: 2;"><label style="font-size:0.75rem; color:var(--text-secondary);">Date</label><input type="date" id="editDate" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                    <div style="flex: 1;"><label style="font-size:0.75rem; color:var(--text-secondary);">Time In</label><input type="text" id="editTimeIn" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                    <div style="flex: 1;"><label style="font-size:0.75rem; color:var(--text-secondary);">Time Out</label><input type="text" id="editTimeOut" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
                 </div>
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <div><label>Month</label><input type="text" id="editMonth" required></div>
-                    <div><label>Set</label><input type="text" id="editSet" required></div>
+                <div style="display: flex; gap: 8px;">
+                    <div style="flex: 1;"><label style="font-size:0.75rem; color:var(--text-secondary);">Month</label><input type="text" id="editMonth" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                    <div style="flex: 1;"><label style="font-size:0.75rem; color:var(--text-secondary);">Set</label><input type="text" id="editSet" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
                 </div>
-                <label>Location</label>
-                <input type="text" id="editLocation" required>
-                <label>Task Header</label>
-                <input type="text" id="editTaskHeader" required>
-                <label>Task Details</label>
-                <textarea id="editTaskDetails" rows="3" required></textarea>
-                <label>Task Link</label>
-                <input type="url" id="editTaskLink">
-                <label>Hours</label>
-                <input type="text" id="editHours" required>
-                <label>Notes</label>
-                <input type="text" id="editNotes">
-
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <button type="submit" class="btn btn-primary" style="flex:1;">Save Changes</button>
-                    <button type="button" id="modalArchiveBtn" onclick="modalToggleArchive()" class="btn" style="background:var(--accent-yellow); color:#000; flex:1;">Archive</button>
-                    <button type="button" onclick="modalDeleteRecord()" class="btn" style="background:var(--accent-red); color:#fff;">Delete</button>
+                <div><label style="font-size:0.75rem; color:var(--text-secondary);">Location</label><input type="text" id="editLocation" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                <div><label style="font-size:0.75rem; color:var(--text-secondary);">Task Header</label><input type="text" id="editTaskHeader" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                <div><label style="font-size:0.75rem; color:var(--text-secondary);">Task Details</label><textarea id="editTaskDetails" style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px; height: 60px;"></textarea></div>
+                <div><label style="font-size:0.75rem; color:var(--text-secondary);">Doc Link</label><input type="url" id="editTaskLink" style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                <div style="display: flex; gap: 8px;">
+                    <div style="flex: 1;"><label style="font-size:0.75rem; color:var(--text-secondary);">Hours</label><input type="text" id="editHours" required style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
+                    <div style="flex: 1;"><label style="font-size:0.75rem; color:var(--text-secondary);">Notes</label><input type="text" id="editNotes" style="width:100%; padding:8px; background:#18181b; border:1px solid var(--border-color); color:white; border-radius:4px;"></div>
                 </div>
-                <button type="button" onclick="closeEditModal()" class="btn btn-outline" style="width:100%; margin-top:8px;">Cancel</button>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn" style="flex: 2; background: var(--accent-blue); color: white;">Save Changes</button>
+                    <button type="button" onclick="modalDeleteRecord()" class="btn btn-danger" style="flex: 1;"><i class="fa-solid fa-trash"></i> Delete</button>
+                    <button type="button" onclick="closeEditModal()" class="btn" style="flex: 1;">Cancel</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- SCRIPT REFERENCE -->
     <script src="script.js"></script>
 </body>
 </html>
