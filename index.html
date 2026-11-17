@@ -1,0 +1,1943 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time & Task Tracker Pro | Obsidian & Gold Edition</title>
+
+    <!-- FontAwesome & Chart.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+    <!-- App Styles & PWA -->
+    <link rel="stylesheet" href="./style.css">
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icon.svg">
+
+    <meta name="theme-color" content="#0b0b0c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+
+    <!-- AMBIENT GOLDEN WAVE BACKGROUND -->
+    <div class="ambient-bg" aria-hidden="true">
+        <svg viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
+            <defs>
+                <linearGradient id="goldStreak1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#fce694" stop-opacity="0"/>
+                    <stop offset="45%" stop-color="#e6b85c" stop-opacity="0.28"/>
+                    <stop offset="100%" stop-color="#c99638" stop-opacity="0"/>
+                </linearGradient>
+
+                <linearGradient id="goldStreak2" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#fce694" stop-opacity="0.22"/>
+                    <stop offset="50%" stop-color="#d49f40" stop-opacity="0.08"/>
+                    <stop offset="100%" stop-color="#0b0b0c" stop-opacity="0"/>
+                </linearGradient>
+            </defs>
+
+            <path d="M720 -50 C 980 120, 1220 180, 1520 110" stroke="url(#goldStreak1)" stroke-width="2.5"/>
+            <path d="M680 -20 C 960 160, 1240 240, 1520 190" stroke="url(#goldStreak1)" stroke-width="1.2"/>
+            <path d="M780 -60 C 1040 90, 1260 130, 1520 60" stroke="url(#goldStreak2)" stroke-width="45" opacity="0.25"/>
+            <path d="M-80 580 C 120 690, 220 810, 310 960" stroke="url(#goldStreak1)" stroke-width="2.2"/>
+            <path d="M-80 630 C 90 730, 180 840, 250 960" stroke="url(#goldStreak1)" stroke-width="1.2"/>
+            <path d="M-100 540 C 140 660, 250 790, 360 960" stroke="url(#goldStreak2)" stroke-width="38" opacity="0.22"/>
+        </svg>
+    </div>
+
+    <div class="app-shell">
+
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="sidebar" id="sidebar">
+
+            <div>
+                <div class="brand-logo">
+                    <div class="monogram-badge">TT</div>
+
+                    <div class="brand-text">
+                        <h1>Time & Task</h1>
+                        <span>Tracker Pro</span>
+                    </div>
+                </div>
+
+                <nav class="nav-menu">
+
+                    <button class="nav-btn active" data-view="dashboard" onclick="navigateTo('dashboard')">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Dashboard</span>
+                    </button>
+
+                    <button class="nav-btn" data-view="tasks" onclick="navigateTo('tasks')">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Tasks & Ledger</span>
+                    </button>
+
+                    <button class="nav-btn" data-view="payroll" onclick="navigateTo('payroll')">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>Work Calendar & Payroll</span>
+                        <span class="sidebar-gold-pill">Pay</span>
+                    </button>
+
+                    <button class="nav-btn" data-view="analytics" onclick="navigateTo('analytics')">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </button>
+
+                    <button class="nav-btn" data-view="manage" onclick="navigateTo('manage')">
+                        <i class="fa-solid fa-users-gear"></i>
+                        <span>Manage Team</span>
+                    </button>
+
+                    <!-- APP & SUPPORT CENTER -->
+                    <button class="nav-btn" data-view="system" onclick="navigateTo('system')">
+                        <i class="fa-solid fa-mobile-screen-button"></i>
+                        <span>App & Support Center</span>
+                    </button>
+
+                    <button class="nav-btn" data-view="account" onclick="navigateTo('account')">
+                        <i class="fa-solid fa-user-circle"></i>
+                        <span>My Account</span>
+                    </button>
+
+                </nav>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="footer-user-card">
+
+                    <div class="footer-user-info">
+                        <div class="avatar-circle" id="sidebarAvatar">D</div>
+
+                        <div style="min-width: 0;">
+                            <div id="sidebarName" style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                Dhannica
+                            </div>
+
+                            <div id="sidebarRole" style="font-size: 11px; color: var(--gold-mid);">
+                                Employee
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="action-icon-btn" onclick="openAuthModal()" title="Switch Account / Sign Out">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- MAIN WORKSPACE -->
+        <div class="main-wrapper">
+
+            <!-- TOP HEADER -->
+            <header class="top-header">
+
+                <div style="display: flex; align-items: center; gap: 14px;">
+
+                    <button class="mobile-toggle" onclick="toggleMobileSidebar()">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+
+                    <div class="greeting-block">
+                        <h2>Good Day, <span id="headerUserName">Dhannica</span>! 👋</h2>
+
+                        <div class="greeting-sub">
+                            <span>Welcome to Time & Task Tracker Pro. Here's your shift at a glance.</span>
+
+                            <span class="live-status-pill clocked-out" id="headerShiftPill">
+                                <span class="status-dot"></span>
+                                <span id="headerShiftText">Clocked Out • 0 Online</span>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="header-controls">
+
+                    <div class="search-pill">
+                        <i class="fa-solid fa-magnifying-glass" style="color: var(--text-muted); font-size: 12px;"></i>
+
+                        <input
+                            type="text"
+                            id="globalSearchInput"
+                            placeholder="Search tasks, PRs..."
+                            oninput="handleGlobalSearch(this.value)"
+                        >
+
+                        <span class="kbd-badge">Ctrl + K</span>
+                    </div>
+
+                    <button class="icon-circle-btn" onclick="toggleTheme()" title="Toggle Light / Dark Mode">
+                        <i class="fa-solid fa-sun" id="themeIcon"></i>
+                    </button>
+
+                    <button class="icon-circle-btn" onclick="showToast('All shift logs and task updates are synced.')" title="Notifications">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notif-badge"></span>
+                    </button>
+
+                    <div class="profile-pill" onclick="quickToggleRole()" title="Click to toggle Employee / Manager Role">
+                        <div class="avatar-circle" id="headerAvatar">D</div>
+
+                        <div class="profile-pill-meta">
+                            <strong id="pillUserName">Dhannica</strong>
+
+                            <span id="pillUserRole">
+                                Employee
+                                <i class="fa-solid fa-repeat" style="font-size: 9px; margin-left: 3px;"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </header>
+
+            <!-- MAIN CONTENT -->
+            <main class="content-body">
+
+                <!-- ==========================================
+                     VIEW 1: DASHBOARD
+                =========================================== -->
+                <section id="view-dashboard" class="view-section active">
+
+                    <div class="section-heading">
+                        <div class="section-icon-box">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+
+                        <div>
+                            <h3>Shift & Task Overview</h3>
+                            <p>Track your active shift hours, log tasks, and monitor completion targets.</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+
+                        <div class="stat-card glow-gold">
+                            <div class="stat-icon">
+                                <i class="fa-solid fa-bullseye"></i>
+                            </div>
+
+                            <div class="stat-info">
+                                <span>Total Hours Logged</span>
+                                <strong id="metricTotalHours">38.5 / 40h</strong>
+                                <small>Current weekly cycle</small>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glow-violet">
+                            <div class="stat-icon">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            </div>
+
+                            <div class="stat-info">
+                                <span>Active Shift Timer</span>
+                                <strong id="metricShiftTimer">00:00:00</strong>
+                                <small id="metricShiftSub">Ready to clock in</small>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glow-amber">
+                            <div class="stat-icon">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+
+                            <div class="stat-info">
+                                <span>Completed Tasks</span>
+                                <strong id="metricCompletedTasks">14 Tasks</strong>
+                                <small>Verified in ledger</small>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glow-emerald">
+                            <div class="stat-icon">
+                                <i class="fa-solid fa-gauge-high"></i>
+                            </div>
+
+                            <div class="stat-info">
+                                <span>Weekly Target</span>
+                                <strong id="metricCompletionPct">96.3%</strong>
+                                <small>On track for goal</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="dashboard-split">
+
+                        <div>
+
+                            <!-- SHIFT CONTROL -->
+                            <div class="glass-card shift-control-card">
+
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+
+                                        <span class="live-status-pill clocked-out" id="cardShiftBadge">
+                                            <span class="status-dot"></span>
+                                            <span id="cardShiftStatus">CLOCKED OUT</span>
+                                        </span>
+
+                                        <span id="liveDigitalClock" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-secondary);">
+                                            07:05:00 PM
+                                        </span>
+
+                                    </div>
+
+                                    <div class="timer-readout" id="mainShiftTimer">00:00:00</div>
+
+                                    <p style="font-size: 12px; color: var(--text-secondary);">
+                                        Active shift elapsed time (breaks automatically deducted)
+                                    </p>
+                                </div>
+
+                                <div class="shift-actions">
+
+                                    <button class="btn btn-gold" id="btnClockIn" onclick="clockIn()">
+                                        <i class="fa-solid fa-play"></i> Clock In
+                                    </button>
+
+                                    <button class="btn btn-amber" id="btnBreak" onclick="toggleBreak()" disabled>
+                                        <i class="fa-solid fa-mug-hot"></i>
+                                        <span id="btnBreakLabel">Start Break</span>
+                                    </button>
+
+                                    <button class="btn btn-danger" id="btnClockOut" onclick="clockOut()" disabled>
+                                        <i class="fa-solid fa-stop"></i> Clock Out
+                                    </button>
+
+                                </div>
+                            </div>
+
+                            <!-- RECENT LEDGER -->
+                            <div class="glass-card">
+
+                                <div class="filter-bar">
+
+                                    <div>
+                                        <h4 style="font-size: 16px; font-weight: 700;">
+                                            Recent Task & Shift Ledger
+                                        </h4>
+
+                                        <p style="font-size: 12px; color: var(--text-secondary);">
+                                            Quick view of logged shifts, PR links, and managerial Ops Notes
+                                        </p>
+                                    </div>
+
+                                    <div style="display: flex; gap: 8px;">
+
+                                        <button class="btn btn-outline btn-sm" onclick="navigateTo('payroll')">
+                                            <i class="fa-solid fa-calendar-days"></i> Calendar & Payroll
+                                        </button>
+
+                                        <button class="btn btn-outline btn-sm" onclick="navigateTo('tasks')">
+                                            Full Ledger
+                                        </button>
+
+                                        <button class="btn btn-gold btn-sm" onclick="openTaskModal()">
+                                            <i class="fa-solid fa-plus"></i> Log Task
+                                        </button>
+
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="ledger-table">
+
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Time In / Out</th>
+                                                <th>Location / Set</th>
+                                                <th>Task Description</th>
+                                                <th>Hours</th>
+                                                <th>Ops Note</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="dashboardPreviewBody"></tbody>
+
+                                    </table>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- RIGHT DASHBOARD COLUMN -->
+                        <div class="right-stack">
+
+                            <div class="glass-card gold-accent-card">
+
+                                <div class="wallet-header">
+                                    <i class="fa-solid fa-wallet"></i>
+                                    <span>Pay Period & Shift Summary</span>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-size: 11.5px; color: var(--text-secondary);" id="dashPeriodLabel">
+                                        2nd Cutoff (Nov 16–30)
+                                    </span>
+
+                                    <span class="tag-set" style="font-size: 10.5px;" id="dashRateBadge">
+                                        ₱350.00/hr
+                                    </span>
+                                </div>
+
+                                <div class="wallet-balance-row" style="margin-bottom: 6px;">
+
+                                    <div>
+                                        <div class="wallet-big-num" id="dashPeriodNetPay">₱0.00</div>
+
+                                        <span style="font-size: 11.5px; color: var(--gold-mid); font-weight: 600;" id="rightSummaryHours">
+                                            38.50 hrs total logged
+                                        </span>
+                                    </div>
+
+                                    <div style="display:flex; flex-direction: column; gap:6px;">
+
+                                        <button class="btn btn-gold btn-sm" onclick="navigateTo('payroll')" title="Open Work Calendar & Payroll">
+                                            <i class="fa-solid fa-calendar-days"></i> Calendar
+                                        </button>
+
+                                        <button class="btn btn-outline btn-sm" onclick="openTaskModal()">
+                                            <i class="fa-solid fa-plus"></i> Log Task
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                                <div id="rightActivityList" style="margin-top: 12px;"></div>
+
+                                <button class="btn btn-outline" style="width: 100%; margin-top: 6px; font-size: 12px;" onclick="navigateTo('analytics')">
+                                    View all activity <i class="fa-solid fa-arrow-right"></i>
+                                </button>
+
+                            </div>
+
+                            <div class="glass-card">
+                                <h4 style="font-size: 13.5px; font-weight: 700; margin-bottom: 8px; color: var(--gold-light);">
+                                    How shift tracking works
+                                </h4>
+
+                                <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.55;">
+                                    Clock in at the start of your shift to record live hours. Use
+                                    <strong>Start Break</strong> during pauses, and
+                                    <strong>Clock Out</strong> to automatically pre-fill your Task Ledger entry.
+                                    Managers can review and add restricted <strong>Ops Notes</strong>.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- ==========================================
+                     VIEW 2: TASKS & FULL LEDGER
+                =========================================== -->
+                <section id="view-tasks" class="view-section">
+
+                    <div class="section-heading">
+                        <div class="section-icon-box">
+                            <i class="fa-solid fa-table-list"></i>
+                        </div>
+
+                        <div>
+                            <h3>Task & Shift Ledger</h3>
+                            <p>Complete audit table with Date, Time In/Out, Location/Set, PR links, Employee Notes & Manager Ops Notes.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card">
+
+                        <div class="filter-bar">
+
+                            <div class="filter-pills-group">
+
+                                <button class="filter-pill active" data-filter="all" onclick="setTaskFilter('all', this)">
+                                    All tasks <span class="count-badge" id="countAll">0</span>
+                                </button>
+
+                                <button class="filter-pill" data-filter="active" onclick="setTaskFilter('active', this)">
+                                    <span style="width:6px;height:6px;border-radius:50%;background:#10b981;"></span>
+                                    Active <span class="count-badge" id="countActive">0</span>
+                                </button>
+
+                                <button class="filter-pill" data-filter="archived" onclick="setTaskFilter('archived', this)">
+                                    <span style="width:6px;height:6px;border-radius:50%;background:#f59e0b;"></span>
+                                    Archived <span class="count-badge" id="countArchived">0</span>
+                                </button>
+
+                                <button class="filter-pill" data-filter="trash" onclick="setTaskFilter('trash', this)">
+                                    <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;"></span>
+                                    Trash <span class="count-badge" id="countTrash">0</span>
+                                </button>
+
+                            </div>
+
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+
+                                <div class="wallet-notice-box" style="padding: 6px 12px; border-color: var(--border-gold);">
+                                    <i class="fa-solid fa-coins" style="color: var(--gold-mid);"></i>
+
+                                    <span>
+                                        Period Est:
+                                        <strong id="ledgerPeriodEstPay" style="color: var(--gold-light);">₱0.00</strong>
+                                        (<span id="ledgerRateText">₱350/hr</span>)
+                                    </span>
+                                </div>
+
+                                <button class="btn btn-outline btn-sm" onclick="navigateTo('payroll')">
+                                    <i class="fa-solid fa-calendar-days"></i> Work Calendar
+                                </button>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    style="width: 210px; padding: 8px 12px;"
+                                    id="ledgerSearchInput"
+                                    placeholder="Filter description or set..."
+                                    oninput="renderFullLedger()"
+                                >
+
+                                <button class="btn btn-gold" onclick="openTaskModal()">
+                                    <i class="fa-solid fa-plus"></i> Add Task Entry
+                                </button>
+
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="ledger-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>TIME IN / TIME OUT</th>
+                                        <th>Location / Month / Set</th>
+                                        <th>Task Description</th>
+                                        <th>Task Link / PR</th>
+                                        <th>Hours Completed</th>
+                                        <th>Notes</th>
+                                        <th>Ops Note</th>
+                                        <th style="text-align: right;">Actions</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="fullLedgerBody"></tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- ==========================================
+                     VIEW 2B: WORK CALENDAR & PAYROLL
+                =========================================== -->
+                <section id="view-payroll" class="view-section">
+
+                    <div class="section-heading">
+                        <div class="section-icon-box">
+                            <i class="fa-solid fa-calendar-days"></i>
+                        </div>
+
+                        <div>
+                            <h3>Work Hours Calendar & Monthly Payroll Tracker</h3>
+                            <p>Inspect daily logged shifts, switch semi-monthly or monthly pay cutoffs, and preview net payouts.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card payroll-toolbar" style="padding: 14px 20px;">
+
+                        <div class="month-nav-group">
+                            <button class="action-icon-btn" onclick="changePayrollMonth(-1)" title="Previous Month">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+
+                            <strong id="payrollMonthLabel">November 2026</strong>
+
+                            <button class="action-icon-btn" onclick="changePayrollMonth(1)" title="Next Month">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <div class="filter-pills-group" id="cutoffPillsGroup">
+
+                            <button class="filter-pill" data-cutoff="first" onclick="setPayCutoff('first', this)">
+                                1st Cutoff (1 – 15)
+                            </button>
+
+                            <button class="filter-pill active" data-cutoff="second" onclick="setPayCutoff('second', this)">
+                                2nd Cutoff (16 – End)
+                            </button>
+
+                            <button class="filter-pill" data-cutoff="full" onclick="setPayCutoff('full', this)">
+                                Full Month (1 – End)
+                            </button>
+
+                        </div>
+
+                        <div style="display: flex; align-items: center; gap: 10px;">
+
+                            <span id="activeCutoffRangeBadge" class="tag-set" style="font-size: 12px; padding: 6px 12px;">
+                                Nov 16 – Nov 30, 2026
+                            </span>
+
+                            <button class="btn btn-outline btn-sm" onclick="toggleCurrency()" title="Switch Currency ₱ / $">
+                                <i class="fa-solid fa-coins"></i>
+                                <span id="currencyBtnLabel">PHP (₱)</span>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <!-- PAYROLL STATISTICS -->
+                    <div class="stats-grid">
+
+                        <div class="stat-card glow-gold">
+                            <div class="stat-icon">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+
+                            <div class="stat-info">
+                                <span>Period Hours Logged</span>
+                                <strong id="payTotalHours">0.0 hrs</strong>
+                                <small id="payHoursBreakdown">0.0h Reg • 0.0h OT</small>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glow-violet">
+                            <div class="stat-icon">
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                            </div>
+
+                            <div class="stat-info">
+                                <span>Hourly Rate & Reg Pay</span>
+                                <strong id="payRegularAmount">₱0.00</strong>
+                                <small id="payRateSub">Rate: ₱350.00 / hr</small>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glow-amber">
+                            <div class="stat-icon">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+
+                            <div class="stat-info">
+                                <span>Overtime (1.25x) & Bonus</span>
+                                <strong id="payOvertimeAmount">₱0.00</strong>
+                                <small>Shifts exceeding 8.0 hrs/day</small>
+                            </div>
+                        </div>
+
+                        <div class="stat-card glow-emerald">
+                            <div class="stat-icon">
+                                <i class="fa-solid fa-wallet"></i>
+                            </div>
+
+                            <div class="stat-info">
+                                <span>Net Estimated Payout</span>
+                                <strong id="payNetAmount">₱0.00</strong>
+                                <small id="payPayoutDateSub">Upcoming Payout: Nov 30, 2026</small>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- CALENDAR AND PAYROLL -->
+                    <div class="calendar-payroll-split">
+
+                        <div class="glass-card">
+
+                            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
+
+                                <div>
+                                    <h4 style="font-size: 16px; font-weight: 700;">
+                                        Work Hours Calendar
+                                    </h4>
+
+                                    <p style="font-size: 12px; color: var(--text-secondary);">
+                                        Gold-outlined cells belong to your active pay period cutoff. Click any day to inspect or log shifts.
+                                    </p>
+                                </div>
+
+                                <div style="display: flex; align-items: center; gap: 12px; font-size: 11px; color: var(--text-secondary);">
+                                    <span>
+                                        <i class="fa-solid fa-circle" style="color: #10b981; font-size: 8px;"></i>
+                                        Completed
+                                    </span>
+
+                                    <span>
+                                        <i class="fa-solid fa-circle" style="color: #f59e0b; font-size: 8px;"></i>
+                                        Overtime (&gt;8h)
+                                    </span>
+
+                                    <span>
+                                        <i class="fa-solid fa-circle" style="color: rgba(156,163,175,0.45); font-size: 8px;"></i>
+                                        Rest Day
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <div class="calendar-weekdays">
+                                <span>Sun</span>
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                            </div>
+
+                            <div class="calendar-grid" id="workCalendarGrid"></div>
+
+                        </div>
+
+                        <div class="right-stack">
+
+                            <!-- PAY PERIOD STATEMENT -->
+                            <div class="glass-card gold-accent-card">
+
+                                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+
+                                    <div class="wallet-header" style="margin-bottom: 0;">
+                                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                                        <span>Pay Period Statement</span>
+                                    </div>
+
+                                    <span class="live-status-pill on-break" id="payrollStatusBadge">
+                                        <span class="status-dot"></span>
+                                        <span id="payrollStatusText">Pending Payout</span>
+                                    </span>
+
+                                </div>
+
+                                <!-- BASE RATE -->
+                                <div style="padding: 12px; border-radius: 12px; background: var(--bg-input); border: 1px solid var(--border-subtle); margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px;">
+
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+
+                                        <div>
+                                            <span style="font-size: 11.5px; font-weight: 600; color: var(--text-primary); display: block;">
+                                                Base Hourly Rate
+                                            </span>
+
+                                            <span style="font-size: 10.5px; color: var(--gold-mid);" id="rateRoleHint">
+                                                Locked • Click Edit to modify
+                                            </span>
+                                        </div>
+
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+
+                                            <input
+                                                type="number"
+                                                id="hourlyRateInput"
+                                                class="form-control"
+                                                style="width: 95px; padding: 6px 10px; font-weight: 700; text-align: right;"
+                                                value="350"
+                                                min="1"
+                                                step="5"
+                                                disabled
+                                                onkeydown="if(event.key==='Enter'){ event.preventDefault(); saveHourlyRateEdit(); }"
+                                            >
+
+                                            <button type="button" class="btn btn-outline btn-sm" id="btnEditHourlyRate" onclick="enableHourlyRateEdit()" title="Edit Base Hourly Rate">
+                                                <i class="fa-solid fa-pen"></i> Edit
+                                            </button>
+
+                                            <button type="button" class="btn btn-gold btn-sm" id="btnSaveHourlyRate" onclick="saveHourlyRateEdit()" style="display: none;" title="Save Base Hourly Rate">
+                                                <i class="fa-solid fa-check"></i> Save
+                                            </button>
+
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; border-top: 1px solid var(--border-subtle); padding-top: 8px;">
+
+                                        <span style="font-size: 11.5px; color: var(--text-secondary);">
+                                            Overtime Multiplier (&gt;8h/day)
+                                        </span>
+
+                                        <select id="otMultiplierSelect" class="form-control" style="width: 110px; padding: 5px 8px; font-weight: 600;" onchange="updateOtMultiplier(this.value)">
+                                            <option value="1.25" selected>1.25x OT</option>
+                                            <option value="1.30">1.30x OT</option>
+                                            <option value="1.50">1.50x OT</option>
+                                            <option value="2.00">2.00x Holiday</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="payslip-row">
+                                    <span style="color: var(--text-secondary);">
+                                        Regular Hours (<span id="slipRegHrs">0.0</span>h)
+                                    </span>
+                                    <strong id="slipRegPay">₱0.00</strong>
+                                </div>
+
+                                <div class="payslip-row">
+                                    <span style="color: var(--text-secondary);">
+                                        Overtime <span id="slipOtMultLabel">1.25x</span>
+                                        (<span id="slipOtHrs">0.0</span>h)
+                                    </span>
+                                    <strong style="color: #fbbf24;" id="slipOtPay">₱0.00</strong>
+                                </div>
+
+                                <div class="payslip-row">
+                                    <span style="color: var(--text-secondary);">
+                                        Attendance & Shift Bonus
+                                    </span>
+                                    <strong style="color: #34d399;" id="slipBonusPay">₱0.00</strong>
+                                </div>
+
+                                <div class="payslip-row">
+                                    <span style="color: var(--text-secondary);">
+                                        Gross Period Earnings
+                                    </span>
+                                    <strong id="slipGrossPay">₱0.00</strong>
+                                </div>
+
+                                <div class="payslip-row">
+
+                                    <label class="switch-toggle">
+                                        <input type="checkbox" id="deductionsToggle" checked onchange="renderPayrollAndCalendar()">
+                                        <span>Statutory Deductions (SSS / Tax / PhilHealth)</span>
+                                    </label>
+
+                                    <strong style="color: #f87171;" id="slipDeductions">-₱0.00</strong>
+
+                                </div>
+
+                                <div class="payslip-total-box">
+
+                                    <div>
+                                        <span style="font-size: 11px; color: var(--text-secondary); display: block;">
+                                            NET ESTIMATED PAYOUT
+                                        </span>
+
+                                        <strong style="font-size: 22px; font-weight: 800; color: var(--gold-light);" id="slipNetTotal">
+                                            ₱0.00
+                                        </strong>
+                                    </div>
+
+                                    <i class="fa-solid fa-shield-check" style="font-size: 22px; color: var(--gold-mid);"></i>
+
+                                </div>
+
+                                <div style="display: flex; gap: 10px; margin-top: 16px;">
+
+                                    <button class="btn btn-outline" style="flex: 1;" onclick="downloadPayslipSummary()">
+                                        <i class="fa-solid fa-print"></i> Download Payslip
+                                    </button>
+
+                                    <button class="btn btn-gold" id="btnApprovePayroll" style="flex: 1;" onclick="togglePayrollApproval()">
+                                        <i class="fa-solid fa-circle-check"></i>
+                                        <span id="btnApprovePayrollText">Mark Paid</span>
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <!-- CUTOFF RULES -->
+                            <div class="glass-card">
+
+                                <h4 style="font-size: 13.5px; font-weight: 700; margin-bottom: 8px; color: var(--gold-light);">
+                                    Pay Period Cutoff Rules
+                                </h4>
+
+                                <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.55;">
+                                    <strong>1st Cutoff (1st – 15th):</strong>
+                                    Released on the 20th of the month.
+                                    <br>
+
+                                    <strong>2nd Cutoff (16th – End):</strong>
+                                    Released on the last working day of the month.
+                                    Daily hours beyond <strong>8.0 hrs</strong> automatically accrue a
+                                    <strong>1.25x</strong> overtime multiplier.
+                                </p>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- ==========================================
+                     VIEW 3: ANALYTICS
+                =========================================== -->
+                <section id="view-analytics" class="view-section">
+
+                    <div class="section-heading">
+                        <div class="section-icon-box">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+
+                        <div>
+                            <h3>Analytics & Activity Stream</h3>
+                            <p>Visual breakdown of weekly hours logged, task distribution, and real-time audit logs.</p>
+                        </div>
+                    </div>
+
+                    <div class="charts-grid">
+
+                        <div class="glass-card">
+                            <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 4px;">
+                                Weekly Hours Completed
+                            </h4>
+
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">
+                                Daily tracked shift hours across the current workweek
+                            </p>
+
+                            <div class="chart-container">
+                                <canvas id="weeklyHoursChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="glass-card">
+                            <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 4px;">
+                                Task Distribution by Set
+                            </h4>
+
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">
+                                Hours allocated across project locations & sets
+                            </p>
+
+                            <div class="chart-container">
+                                <canvas id="taskDistChart"></canvas>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="glass-card">
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 14px;">
+                            Real-Time Activity Audit Log
+                        </h4>
+
+                        <div id="fullActivityLogList"></div>
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     VIEW 4: MANAGE TEAM & TIMESHEETS
+                =========================================== -->
+                <section id="view-manage" class="view-section">
+
+                    <div class="section-heading" style="justify-content: space-between; flex-wrap: wrap;">
+
+                        <div style="display: flex; align-items: center; gap: 14px;">
+
+                            <div class="section-icon-box">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+
+                            <div>
+                                <h3>Manage Team, Rates & Payroll Roster</h3>
+                                <p>Manage individual hourly rates, inspect pay period hours, and approve payroll disbursements.</p>
+                            </div>
+
+                        </div>
+
+                        <button class="btn btn-gold btn-sm" onclick="navigateTo('payroll')">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            Open Work Calendar & Payroll
+                        </button>
+
+                    </div>
+
+                    <div class="team-grid" id="teamMembersGrid"></div>
+
+                    <!-- TEAM PAYROLL ROSTER -->
+                    <div class="glass-card" style="margin-bottom: 22px;">
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 16px;">
+
+                            <div>
+                                <h4 style="font-size: 15px; font-weight: 700;">
+                                    Team Payroll & Hourly Rate Roster
+                                </h4>
+
+                                <p style="font-size: 12px; color: var(--text-secondary);">
+                                    Calculated live for active cutoff
+                                    (<span id="teamRosterPeriodLabel">Nov 16 – Nov 30, 2026</span>).
+                                    Managers can edit member hourly rates.
+                                </p>
+                            </div>
+
+                            <span class="tag-set" id="teamRosterRoleBadge">
+                                Employee Read-Only
+                            </span>
+
+                        </div>
+
+                        <div class="table-responsive">
+
+                            <table class="ledger-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Team Member</th>
+                                        <th>Role</th>
+                                        <th>Hourly Rate</th>
+                                        <th>Period Hours (Reg / OT)</th>
+                                        <th>Gross Pay</th>
+                                        <th>Net Payout</th>
+                                        <th>Payroll Status</th>
+                                        <th style="text-align: right;">Payroll Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="teamPayrollRosterBody"></tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                    <!-- TIMESHEET APPROVALS -->
+                    <div class="glass-card">
+
+                        <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 4px;">
+                            Weekly Hours Completed & Approvals
+                        </h4>
+
+                        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">
+                            Manager / Admin approval controls for submitted employee timesheets
+                        </p>
+
+                        <div class="table-responsive">
+
+                            <table class="ledger-table">
+
+                                <thead>
+                                    <tr>
+                                        <th>Team Member</th>
+                                        <th>Role</th>
+                                        <th>Week Ending</th>
+                                        <th>Hours Completed</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Manager Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="timesheetsTableBody"></tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     VIEW 5: APP & SUPPORT CENTER
+                =========================================== -->
+                <section id="view-system" class="view-section">
+
+                    <!-- PAGE HEADING -->
+                    <div class="section-heading">
+
+                        <div class="section-icon-box">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+
+                        <div>
+                            <h3>App & Support Center</h3>
+                            <p>Access, install, and get help with Time & Task Tracker Pro on your devices.</p>
+                        </div>
+
+                    </div>
+
+
+                    <!-- DOWNLOAD & ACCESS APP -->
+                    <div class="glass-card gold-accent-card" style="margin-bottom: 20px;">
+
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+
+                            <i class="fa-solid fa-qrcode" style="font-size: 22px; color: var(--gold-mid);"></i>
+
+                            <div>
+                                <h4 style="font-size: 16px; font-weight: 700;">
+                                    Download & Access the App
+                                </h4>
+
+                                <p style="font-size: 12px; color: var(--text-secondary);">
+                                    Scan the QR code using your phone to open Time & Task Tracker Pro.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 30px; padding: 15px 0;">
+
+                            <!-- QR CODE -->
+                            <div style="background: #ffffff; padding: 14px; border-radius: 14px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+
+                                <div id="appQRCode" style="width: 180px; height: 180px; display: flex; align-items: center; justify-content: center;">
+                                    <span style="color: #333; font-size: 12px;">
+                                        Generating QR code...
+                                    </span>
+                                </div>
+
+                                <span style="font-size: 11px; font-weight: 700; color: #333;">
+                                    SCAN TO OPEN APP
+                                </span>
+
+                            </div>
+
+                            <!-- APP INFORMATION -->
+                            <div style="max-width: 360px; width: 100%;">
+
+                                <h4 style="font-size: 18px; margin-bottom: 8px;">
+                                    Your Tracker, Anywhere.
+                                </h4>
+
+                                <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+                                    Access your work dashboard, clock in and out, manage tasks, check payroll, and monitor your activity using your computer, tablet, or smartphone.
+                                </p>
+
+                                <!-- APP LINK -->
+                                <div style="padding: 12px; border-radius: 10px; background: var(--bg-input); border: 1px solid var(--border-subtle); margin-bottom: 14px;">
+
+                                    <span style="display: block; font-size: 10px; color: var(--text-muted); margin-bottom: 5px;">
+                                        APP LINK
+                                    </span>
+
+                                    <span id="appLinkDisplay" style="font-size: 12px; color: var(--gold-light); word-break: break-all;">
+                                        Loading app link...
+                                    </span>
+
+                                </div>
+
+                                <!-- APP ACTIONS -->
+                                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+
+                                    <button
+                                        class="btn btn-gold btn-sm"
+                                        onclick="window.open(window.location.origin, '_blank', 'noopener,noreferrer')"
+                                    >
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                        Open App
+                                    </button>
+
+                                    <button class="btn btn-outline btn-sm" onclick="copyAppLink()">
+                                        <i class="fa-solid fa-copy"></i>
+                                        Copy App Link
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INSTALLATION GUIDE HEADING -->
+                    <div class="section-heading" style="margin-top: 22px;">
+
+                        <div class="section-icon-box">
+                            <i class="fa-solid fa-download"></i>
+                        </div>
+
+                        <div>
+                            <h3>Installation Guide</h3>
+                            <p>Follow the instructions for your device to add the app to your home screen or desktop.</p>
+                        </div>
+
+                    </div>
+
+
+                    <!-- INSTALLATION CARDS -->
+                    <div class="system-grid">
+
+                        <!-- ANDROID -->
+                        <div class="glass-card download-card">
+
+                            <i class="fa-brands fa-android"></i>
+
+                            <h4>Android Devices</h4>
+
+                            <p style="font-size: 12px; color: var(--text-secondary);">
+                                Install the app using Google Chrome.
+                            </p>
+
+                            <ol style="font-size: 12px; color: var(--text-secondary); line-height: 1.9; padding-left: 20px; margin: 12px 0;">
+                                <li>Open your app link in Chrome.</li>
+                                <li>Tap the three-dot menu.</li>
+                                <li>Select Install app or Add to Home screen.</li>
+                                <li>Follow the installation instructions.</li>
+                            </ol>
+
+                            <button class="btn btn-outline btn-sm" onclick="showToast('Open your app in Chrome and use the three-dot menu to install it.')">
+                                <i class="fa-solid fa-circle-info"></i>
+                                Installation Help
+                            </button>
+
+                        </div>
+
+
+                        <!-- IOS -->
+                        <div class="glass-card download-card">
+
+                            <i class="fa-brands fa-apple"></i>
+
+                            <h4>iPhone & iPad</h4>
+
+                            <p style="font-size: 12px; color: var(--text-secondary);">
+                                Add the app to your Apple device using Safari.
+                            </p>
+
+                            <ol style="font-size: 12px; color: var(--text-secondary); line-height: 1.9; padding-left: 20px; margin: 12px 0;">
+                                <li>Open your app link in Safari.</li>
+                                <li>Tap the Share button.</li>
+                                <li>Select Add to Home Screen.</li>
+                                <li>Tap Add to finish.</li>
+                            </ol>
+
+                            <button class="btn btn-outline btn-sm" onclick="showToast('On iPhone or iPad, open the app in Safari and select Share, then Add to Home Screen.')">
+                                <i class="fa-solid fa-circle-info"></i>
+                                Installation Help
+                            </button>
+
+                        </div>
+
+
+                        <!-- DESKTOP -->
+                        <div class="glass-card download-card">
+
+                            <i class="fa-solid fa-desktop"></i>
+
+                            <h4>Windows & Desktop</h4>
+
+                            <p style="font-size: 12px; color: var(--text-secondary);">
+                                Use your preferred supported browser.
+                            </p>
+
+                            <ol style="font-size: 12px; color: var(--text-secondary); line-height: 1.9; padding-left: 20px; margin: 12px 0;">
+                                <li>Open your app link in Chrome or Edge.</li>
+                                <li>Look for the install icon in the address bar or browser menu.</li>
+                                <li>Select Install App.</li>
+                                <li>Launch it from your desktop or Start menu.</li>
+                            </ol>
+
+                            <button class="btn btn-outline btn-sm" onclick="showToast('Open the app in Chrome or Edge and look for the Install App option in the browser menu.')">
+                                <i class="fa-solid fa-circle-info"></i>
+                                Installation Help
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- HELP & SUPPORT -->
+                    <div class="glass-card" style="margin-top: 20px;">
+
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+
+                            <i class="fa-solid fa-headset" style="font-size: 21px; color: var(--gold-mid);"></i>
+
+                            <div>
+                                <h4 style="font-size: 15px; font-weight: 700;">
+                                    Help & Support
+                                </h4>
+
+                                <p style="font-size: 12px; color: var(--text-secondary);">
+                                    Need assistance? Check these common solutions.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div style="display: grid; gap: 12px;">
+
+                            <!-- LOADING ISSUE -->
+                            <div style="padding: 13px; border-radius: 10px; background: var(--bg-input); border: 1px solid var(--border-subtle);">
+
+                                <strong style="font-size: 13px;">
+                                    <i class="fa-solid fa-wifi" style="color: var(--gold-mid); margin-right: 7px;"></i>
+                                    App is not loading
+                                </strong>
+
+                                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px; line-height: 1.6;">
+                                    Check your internet connection, refresh the page, and reopen the app.
+                                </p>
+
+                            </div>
+
+                            <!-- LOGIN ISSUE -->
+                            <div style="padding: 13px; border-radius: 10px; background: var(--bg-input); border: 1px solid var(--border-subtle);">
+
+                                <strong style="font-size: 13px;">
+                                    <i class="fa-solid fa-lock" style="color: var(--gold-mid); margin-right: 7px;"></i>
+                                    Unable to log in
+                                </strong>
+
+                                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px; line-height: 1.6;">
+                                    Verify your email and password. If the problem continues, contact your system administrator.
+                                </p>
+
+                            </div>
+
+                            <!-- UPDATE ISSUE -->
+                            <div style="padding: 13px; border-radius: 10px; background: var(--bg-input); border: 1px solid var(--border-subtle);">
+
+                                <strong style="font-size: 13px;">
+                                    <i class="fa-solid fa-rotate" style="color: var(--gold-mid); margin-right: 7px;"></i>
+                                    App is not updating
+                                </strong>
+
+                                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 6px; line-height: 1.6;">
+                                    Refresh the browser or close and reopen the installed app. If the issue persists, clear the browser cache.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ABOUT THE APP -->
+                    <div class="glass-card" style="margin-top: 20px;">
+
+                        <div style="display: flex; align-items: center; gap: 14px;">
+
+                            <div class="monogram-badge">TT</div>
+
+                            <div>
+                                <h4 style="font-size: 15px; font-weight: 700;">
+                                    Time & Task Tracker Pro
+                                </h4>
+
+                                <p style="font-size: 12px; color: var(--text-secondary);">
+                                    Obsidian & Gold Edition
+                                </p>
+
+                                <span class="tag-set" style="display: inline-block; margin-top: 6px;">
+                                    Version 1.0.0
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.7; margin-top: 15px;">
+                            A time and task management platform designed to organize employee attendance, work schedules, task records, team activity, and payroll monitoring in one place.
+                        </p>
+
+                        <div style="border-top: 1px solid var(--border-subtle); margin-top: 14px; padding-top: 12px;">
+                            <span style="font-size: 11px; color: var(--text-muted);">
+                                © 2026 Time & Task Tracker Pro. All rights reserved.
+                            </span>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     MY ACCOUNT
+                =========================================== -->
+                <section id="view-account" class="view-section">
+
+                    <div class="section-heading">
+
+                        <div class="section-icon-box">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+
+                        <div>
+                            <h3>My Account</h3>
+                            <p>Manage your profile and account security.</p>
+                        </div>
+
+                    </div>
+
+                    <div class="account-layout">
+
+                        <!-- PROFILE PHOTO -->
+                        <div class="glass-card">
+
+                            <div class="account-card-heading">
+                                <i class="fa-solid fa-camera"></i>
+
+                                <div>
+                                    <h4>Profile Photo</h4>
+                                    <p>Upload a JPG, PNG, or WebP image (max 1.5 MB).</p>
+                                </div>
+                            </div>
+
+                            <div class="account-photo-area">
+
+                                <img
+                                    id="accountPhotoPreview"
+                                    class="account-photo-preview"
+                                    alt="Profile photo preview"
+                                    src="data:,"
+                                >
+
+                                <div class="account-photo-actions">
+
+                                    <label for="accountPhotoInput" class="btn btn-outline">
+                                        <i class="fa-solid fa-upload"></i>
+                                        Choose Photo
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        id="accountPhotoInput"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        hidden
+                                    >
+
+                                    <button class="btn btn-outline" type="button" onclick="removeAccountPhoto()">
+                                        <i class="fa-solid fa-trash"></i>
+                                        Remove Photo
+                                    </button>
+
+                                    <small>
+                                        Photo is securely stored in your Supabase profile-photos bucket.
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PERSONAL INFORMATION -->
+                        <div class="glass-card">
+
+                            <div class="account-card-heading">
+
+                                <i class="fa-solid fa-address-card"></i>
+
+                                <div>
+                                    <h4>Personal Information</h4>
+                                    <p>Update your account details.</p>
+                                </div>
+
+                            </div>
+
+                            <form id="accountForm">
+
+                                <div class="form-group">
+                                    <label for="accountName">Full Name</label>
+                                    <input class="form-control" id="accountName" required maxlength="100">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="accountEmail">Email Address</label>
+                                    <input class="form-control" id="accountEmail" type="email" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="accountMobile">Mobile Number</label>
+                                    <input class="form-control" id="accountMobile" type="tel" maxlength="30">
+                                </div>
+
+                                <div class="account-form-actions">
+
+                                    <button type="button" class="btn btn-outline" onclick="loadAccountDetails()">
+                                        Cancel
+                                    </button>
+
+                                    <button type="submit" class="btn btn-gold">
+                                        <i class="fa-solid fa-floppy-disk"></i>
+                                        Save Changes
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+
+
+                        <!-- PASSWORD & SECURITY -->
+                        <div class="glass-card account-security-card">
+
+                            <div class="account-card-heading">
+
+                                <i class="fa-solid fa-lock"></i>
+
+                                <div>
+                                    <h4>Password & Security</h4>
+                                    <p>Password changes use Supabase Authentication.</p>
+                                </div>
+
+                            </div>
+
+                            <form id="passwordForm">
+
+                                <div class="form-group">
+                                    <label for="newPassword">New Password</label>
+
+                                    <input
+                                        class="form-control"
+                                        id="newPassword"
+                                        type="password"
+                                        minlength="8"
+                                        autocomplete="new-password"
+                                        placeholder="At least 8 characters"
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm New Password</label>
+
+                                    <input
+                                        class="form-control"
+                                        id="confirmPassword"
+                                        type="password"
+                                        minlength="8"
+                                        autocomplete="new-password"
+                                        placeholder="Re-enter new password"
+                                    >
+                                </div>
+
+                                <button class="btn btn-gold" type="submit">
+                                    Change Password
+                                </button>
+
+                                <p class="account-note">
+                                    Your password is handled by Supabase Authentication and is never stored in this app.
+                                </p>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         MODAL 1: ADD / EDIT TASK LEDGER
+    =========================================== -->
+    <div class="modal-backdrop" id="taskModal">
+
+        <div class="modal-box">
+
+            <div class="modal-header">
+                <h4 id="taskModalTitle">Log New Task Entry</h4>
+
+                <button class="action-icon-btn" onclick="closeTaskModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form class="modal-body" id="taskForm" onsubmit="saveTaskEntry(event)">
+
+                <input type="hidden" id="editTaskId">
+
+                <div class="form-grid-2">
+
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="fDate" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Location / Month / Set</label>
+                        <input
+                            type="text"
+                            id="fLocationSet"
+                            class="form-control"
+                            placeholder="e.g. Remote / Nov / Set-A"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-grid-3">
+
+                    <div class="form-group">
+                        <label>TIME IN</label>
+                        <input type="time" id="fTimeIn" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>TIME OUT</label>
+                        <input type="time" id="fTimeOut" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Hours Completed</label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            id="fHours"
+                            class="form-control"
+                            placeholder="4.0"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Task Description</label>
+                    <input
+                        type="text"
+                        id="fDescription"
+                        class="form-control"
+                        placeholder="Describe completed deliverable or sprint task..."
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Task Link / PR</label>
+                    <input
+                        type="url"
+                        id="fTaskLink"
+                        class="form-control"
+                        placeholder="https://github.com/org/repo/pull/108"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Notes (Employee-editable)</label>
+                    <textarea
+                        id="fNotes"
+                        rows="2"
+                        class="form-control"
+                        placeholder="Additional context or handoff notes..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+
+                    <label style="color: var(--gold-mid);">
+                        Ops Note
+                        <span id="opsAccessHint" style="font-weight: 400; color: var(--text-muted);">
+                            (Restricted to Manager / Admin)
+                        </span>
+                    </label>
+
+                    <textarea
+                        id="fOpsNotes"
+                        rows="2"
+                        class="form-control"
+                        placeholder="Managerial verification or ops review notes..."
+                    ></textarea>
+
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px;">
+
+                    <button type="button" class="btn btn-outline" onclick="closeTaskModal()">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-gold">
+                        Save Entry
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         MODAL 1B: CALENDAR DAY BREAKDOWN
+    =========================================== -->
+    <div class="modal-backdrop" id="dayBreakdownModal">
+
+        <div class="modal-box" style="max-width: 560px;">
+
+            <div class="modal-header">
+
+                <div>
+                    <h4 id="dayModalTitle">Shifts & Tasks — Nov 16, 2026</h4>
+
+                    <span id="dayModalSub" style="font-size: 11.5px; color: var(--text-secondary);">
+                        Total Logged: 8.5 hrs
+                    </span>
+                </div>
+
+                <button class="action-icon-btn" onclick="closeDayBreakdownModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <div id="dayModalEntriesList" style="display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto;"></div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--border-subtle);">
+
+                    <button type="button" class="btn btn-outline" onclick="closeDayBreakdownModal()">
+                        Close
+                    </button>
+
+                    <button type="button" class="btn btn-gold" id="btnLogForSelectedDay">
+                        <i class="fa-solid fa-plus"></i>
+                        Log Shift for This Day
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         MODAL 2: AUTHENTICATION
+    =========================================== -->
+    <div class="modal-backdrop" id="authModal">
+
+        <div class="modal-box" style="max-width: 420px;">
+
+            <div class="modal-header">
+
+                <h4 id="authModalHeading">Sign In to Tracker Pro</h4>
+
+                <button class="action-icon-btn" onclick="closeAuthModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+            </div>
+
+            <form class="modal-body" id="authForm" onsubmit="handleAuthSubmit(event)">
+
+                <div id="authNameGroup" class="form-group" style="display: none;">
+
+                    <label>Full Name</label>
+
+                    <input
+                        type="text"
+                        id="authName"
+                        class="form-control"
+                        placeholder="Juan Dela Cruz"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Email Address</label>
+
+                    <input
+                        type="email"
+                        id="authEmail"
+                        class="form-control"
+                        value="juandelacruz@.com"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Password</label>
+
+                    <input
+                        type="password"
+                        id="authPassword"
+                        class="form-control"
+                        placeholder="Enter Your Password"
+                        required
+                    >
+
+                </div>
+
+                <p class="account-note">
+                    Secure sign-in powered by Supabase. New public accounts are assigned the Employee role.
+                </p>
+
+                <button
+                    type="submit"
+                    class="btn btn-gold"
+                    style="width: 100%; margin-top: 4px;"
+                    id="authSubmitBtn"
+                >
+                    Log In
+                </button>
+
+                <p style="text-align: center; font-size: 12px; color: var(--text-secondary); margin-top: 6px;">
+
+                    <span id="authSwitchPrompt">Don't have an account?</span>
+
+                    <a
+                        href="javascript:void(0)"
+                        onclick="toggleAuthMode()"
+                        style="color: var(--gold-mid); font-weight: 600; margin-left: 4px;"
+                        id="authSwitchLink"
+                    >
+                        Sign Up
+                    </a>
+
+                </p>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         TOAST NOTIFICATIONS
+    =========================================== -->
+    <div class="toast-container" id="toastContainer"></div>
+
+
+    <!-- ==========================================
+         SUPABASE CLIENT & APPLICATION LOGIC
+    =========================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="./supabase-config.js" defer></script>
+    <script src="./script.js" defer></script>
+
+
+    <!-- ==========================================
+         SERVICE WORKER REGISTRATION
+    =========================================== -->
+    <script>
+        if ("serviceWorker" in navigator && location.protocol !== "file:") {
+            navigator.serviceWorker.register("./sw.js").catch(console.error);
+        }
+    </script>
+
+
+    <!-- ==========================================
+         QR CODE GENERATOR
+    =========================================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+    <!-- ==========================================
+         APP LINK & QR CODE FUNCTIONS
+    =========================================== -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Get the deployed application URL.
+            const appURL = window.location.origin;
+
+            const qrContainer = document.getElementById("appQRCode");
+            const linkDisplay = document.getElementById("appLinkDisplay");
+
+            // Display the application link.
+            if (linkDisplay) {
+                linkDisplay.textContent = appURL;
+            }
+
+            // Generate the QR code.
+            if (qrContainer && typeof QRCode !== "undefined") {
+
+                qrContainer.innerHTML = "";
+
+                new QRCode(qrContainer, {
+                    text: appURL,
+                    width: 180,
+                    height: 180,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+            } else if (qrContainer) {
+
+                qrContainer.textContent = "QR code unavailable. Please check your internet connection.";
+
+            }
+
+        });
+
+
+        // COPY APP LINK
+        function copyAppLink() {
+
+            const appURL = window.location.origin;
+
+            if (navigator.clipboard && window.isSecureContext) {
+
+                navigator.clipboard.writeText(appURL)
+                    .then(function () {
+                        showToast("App link copied successfully!");
+                    })
+                    .catch(function () {
+                        showToast("Unable to copy the app link.");
+                    });
+
+            } else {
+
+                const input = document.createElement("textarea");
+
+                input.value = appURL;
+                input.style.position = "fixed";
+                input.style.opacity = "0";
+
+                document.body.appendChild(input);
+
+                input.select();
+
+                try {
+
+                    const copied = document.execCommand("copy");
+
+                    showToast(
+                        copied
+                            ? "App link copied successfully!"
+                            : "Unable to copy the app link."
+                    );
+
+                } catch (error) {
+
+                    showToast("Unable to copy the app link.");
+
+                }
+
+                input.remove();
+
+            }
+
+        }
+    </script>
+
+</body>
+</html>
